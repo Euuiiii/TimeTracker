@@ -19,11 +19,14 @@ if (typeof browser === "undefined") {
   const timeData = stored.timeData || {};
 
   list.innerHTML = '';
+  const entries = Object.entries(timeData);
+  // Sort by time spent
+  entries.sort((a, b) => b[1] - a[1]);
+
   let hasData = false;
-  for (const domain in timeData) {
+  for (const [domain, totalSeconds] of entries) {
     hasData = true;
     const li = document.createElement("li");
-    const totalSeconds = timeData[domain];
     const min = Math.floor(totalSeconds / 60);
     const sec = totalSeconds % 60;
     li.textContent = `${domain}: ${min} min${min !== 1 ? 's' : ''} ${sec} sec`;
