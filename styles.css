@@ -1,115 +1,181 @@
+* {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+*::-webkit-scrollbar {
+  display: none; 
+}
+
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #ffffff;
   margin: 0;
-  padding: 20px 16px 16px 16px;
-  width: 280px;
-  color: #222;
+  padding: 0;
+  width: 320px;
+  min-height: 400px;
+  color: #333;
+  overflow: hidden;
 }
 
 .popup-container {
-  background: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.10);
-  padding: 18px 14px 14px 14px;
-  width: 280px;
-  min-height: 220px;
+  background: #ffffff;
+  padding: 20px;
+  width: 320px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  position: relative; 
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .logo-row {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 24px;
+  padding-top: 10px;
 }
 
 .logo {
-  width: 40px;
-  height: 40px;
-  margin-right: 12px;
-  border-radius: 8px;
-  background: #e3eaf6;
-  object-fit: contain;
-  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.08);
+  width: 64px;
+  height: 64px;
+  margin: 0 0 16px 0;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
-  margin: 0 0 2px 0;
-  color: #2d6cdf;
-  letter-spacing: 0.5px;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  letter-spacing: -0.5px;
+  text-align: center;
 }
 
 .subtitle {
-  font-size: 13px;
-  color: #6c757d;
-  margin: 0;
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0 0 24px 0;
+  text-align: center;
+  font-weight: 400;
 }
 
 ul {
   list-style: none;
   padding: 0;
-  margin: 0 0 12px 0;
-  max-height: 160px;
+  margin: 0 0 20px 0;
+  width: 100%;
+  max-height: 180px;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
+  flex-grow: 1;
+}
+
+ul::-webkit-scrollbar {
+  display: none;
 }
 
 li {
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(44, 62, 80, 0.07);
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
   margin-bottom: 8px;
-  padding: 10px 14px;
-  font-size: 15px;
+  padding: 12px 16px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: all 0.2s ease;
+  color: #495057;
+}
+
+li:hover {
+  background: #e9ecef;
+  border-color: #dee2e6;
 }
 
 .empty-state {
-  color: #a0a4aa;
-  font-size: 15px;
+  color: #adb5bd;
+  font-size: 16px;
   text-align: center;
-  margin-bottom: 12px;
+  margin: 40px 0;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 button {
-  background: linear-gradient(90deg, #2d6cdf 0%, #4f8cff 100%);
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 18px;
-  font-size: 15px;
-  font-weight: 500;
+  background: #f1f3f4;
+  color: #333;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 400;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.08);
-  transition: background 0.2s, box-shadow 0.2s;
-  margin-top: 8px;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  margin-top: auto;
+  width: 100%;
+  letter-spacing: normal;
+  box-shadow: none;
+  text-transform: none;
 }
 
 button:hover {
-  background: linear-gradient(90deg, #1b4fa0 0%, #3576e6 100%);
-  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.12);
+  background: #e2e6ea;
+  color: #222;
+  border-color: #bfc5ca;
+  transform: none;
+}
+
+button:active {
+  background: #e2e6ea;
+  color: #222;
+  border-color: #bfc5ca;
+  transform: none;
 }
 
 .github-link {
   position: absolute;
   top: 16px;
   right: 16px;
-  color: #222;
-  opacity: 0.7;
-  transition: opacity 0.2s, color 0.2s;
+  color: #6c757d;
+  opacity: 0.8;
+  transition: all 0.2s ease;
   text-decoration: none;
   z-index: 10;
+  font-size: 20px;
 }
+
 .github-link:hover {
   opacity: 1;
-  color: #2d6cdf;
+  color: #495057;
+  transform: scale(1.1);
 }
+
 .github-icon {
   display: block;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
