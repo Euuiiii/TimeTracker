@@ -10,11 +10,11 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon.png"
+      "16": "timetracker.png"
     }
   },
   "icons": {
-    "16": "icon.png"
+    "16": "timetracker.png"
   },
   "host_permissions": ["<all_urls>"]
 }

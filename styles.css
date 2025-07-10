@@ -1,19 +1,115 @@
 body {
-  font-family: Arial, sans-serif;
-  padding: 10px;
-  width: 250px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 20px 16px 16px 16px;
+  width: 280px;
+  color: #222;
 }
+
+.popup-container {
+  background: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.10);
+  padding: 18px 14px 14px 14px;
+  width: 280px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative; 
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+  border-radius: 8px;
+  background: #e3eaf6;
+  object-fit: contain;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.08);
+}
+
 h2 {
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 2px 0;
+  color: #2d6cdf;
+  letter-spacing: 0.5px;
 }
+
+.subtitle {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0;
+}
+
 ul {
   list-style: none;
   padding: 0;
+  margin: 0 0 12px 0;
+  max-height: 160px;
+  overflow-y: auto;
 }
+
 li {
-  margin: 5px 0;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(44, 62, 80, 0.07);
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.empty-state {
+  color: #a0a4aa;
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
 button {
-  margin-top: 10px;
-  padding: 5px 10px;
+  background: linear-gradient(90deg, #2d6cdf 0%, #4f8cff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 8px;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #1b4fa0 0%, #3576e6 100%);
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.12);
+}
+
+.github-link {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #222;
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+  text-decoration: none;
+  z-index: 10;
+}
+.github-link:hover {
+  opacity: 1;
+  color: #2d6cdf;
+}
+.github-icon {
+  display: block;
 }

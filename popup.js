@@ -7,17 +7,40 @@ if (typeof browser === "undefined") {
 
     document.addEventListener("DOMContentLoaded", async () => {
   const list = document.getElementById("list");
+  const emptyState = document.getElementById("empty-state");
+  list.innerHTML = '';
+  emptyState.style.display = 'none';
+
+  // Show loading state
+  emptyState.textContent = 'Loading...';
+  emptyState.style.display = 'block';
+
   const stored = await browser.storage.local.get("timeData");
   const timeData = stored.timeData || {};
 
+  list.innerHTML = '';
+  let hasData = false;
   for (const domain in timeData) {
+    hasData = true;
     const li = document.createElement("li");
-    li.textContent = `${domain}: ${Math.floor(timeData[domain] / 60)} min`;
+    const totalSeconds = timeData[domain];
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    li.textContent = `${domain}: ${min} min${min !== 1 ? 's' : ''} ${sec} sec`;
     list.appendChild(li);
+  }
+
+  if (!hasData) {
+    emptyState.textContent = 'No browsing data yet.';
+    emptyState.style.display = 'block';
+  } else {
+    emptyState.style.display = 'none';
   }
 
   document.getElementById("clear").addEventListener("click", async () => {
     await browser.storage.local.set({ timeData: {} });
     list.innerHTML = "";
+    emptyState.textContent = 'No browsing data yet.';
+    emptyState.style.display = 'block';
   });
 });
