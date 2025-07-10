@@ -14,18 +14,32 @@ async function updateTime(tabId, url) {
   const domain = new URL(url).hostname;
   const endTime = Date.now();
 
+  // Always load timeData at the start
+  const stored = await browser.storage.local.get("timeData");
+  const timeData = stored.timeData || {};
+
   if (currentTab && startTime) {
     const timeSpent = Math.floor((endTime - startTime) / 1000);
-    const stored = await browser.storage.local.get("timeData");
-    const timeData = stored.timeData || {};
 
     if (!timeData[currentTab]) {
-      timeData[currentTab] = 0;
+      timeData[currentTab] = { seconds: 0, lastVisited: 0 };
+    } else if (typeof timeData[currentTab] === 'number') {
+      // Migrate old format
+      timeData[currentTab] = { seconds: timeData[currentTab], lastVisited: 0 };
     }
-    timeData[currentTab] += timeSpent;
-
-    await browser.storage.local.set({ timeData });
+    timeData[currentTab].seconds += timeSpent;
+    timeData[currentTab].lastVisited = endTime;
   }
+
+  if (!timeData[domain]) {
+    timeData[domain] = { seconds: 0, lastVisited: 0 };
+  } else if (typeof timeData[domain] === 'number') {
+    // Migrate old format
+    timeData[domain] = { seconds: timeData[domain], lastVisited: 0 };
+  }
+  timeData[domain].lastVisited = endTime;
+
+  await browser.storage.local.set({ timeData });
 
   currentTab = domain;
   startTime = Date.now();

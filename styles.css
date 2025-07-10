@@ -88,8 +88,9 @@ li {
   padding: 12px 16px;
   font-size: 14px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start; /* or center if you want centered text */
+  justify-content: flex-start;
   transition: all 0.2s ease;
   color: #495057;
 }
@@ -178,4 +179,32 @@ button:active {
 
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+.last-visited {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.show-more-btn {
+  background: #f1f3f4;
+  color: #333;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  margin: 8px auto 0 auto;
+  width: auto;
+  display: block;
+}
+
+.show-more-btn:hover {
+  background: #e2e6ea;
+  color: #222;
+  border-color: #bfc5ca;
 }
