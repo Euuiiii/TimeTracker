@@ -3,7 +3,7 @@
   "name": "Time Tracker",
   "version": "1.0",
   "description": "Track time spent on each website.",
-  "permissions": ["tabs", "storage", "activeTab"],
+  "permissions": ["tabs", "storage", "activeTab", "notifications"],
   "background": {
     "scripts": ["background.js"]
   },
