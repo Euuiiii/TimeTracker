@@ -175,7 +175,7 @@ li {
   border: 1px solid #e9ecef;
   border-radius: 8px;
   margin-bottom: 8px;
-  padding: 12px 16px;
+  padding: 12px 40px 12px 16px; /* Added right padding for delete button */
   font-size: 14px;
   display: flex;
   flex-direction: column;
@@ -563,4 +563,244 @@ body.dark-mode .reminder-section {
 }
 body.dark-mode .reminder-section h4 {
   color: #e0e0e0;
+}
+
+/* Site-specific reminders */
+.site-reminders {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e9ecef;
+}
+
+.site-reminders h5 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #495057;
+  font-weight: 600;
+}
+
+.site-reminder-controls {
+  margin-bottom: 8px;
+}
+
+.site-reminder-time-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.site-reminder-controls select {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  background: white;
+}
+
+.site-time-input {
+  width: 80px !important;
+  margin-bottom: 0 !important;
+}
+
+.add-reminder-btn {
+  background: #28a745;
+  color: white;
+  border: 1px solid #28a745;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.add-reminder-btn:hover {
+  background: #218838;
+  border-color: #218838;
+}
+
+.site-reminders-list {
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+.site-reminder-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 13px;
+}
+
+.site-reminder-item:last-child {
+  border-bottom: none;
+}
+
+.site-name {
+  font-weight: 500;
+  color: #495057;
+  flex: 1;
+}
+
+.time-limit {
+  color: #6c757d;
+  margin: 0 8px;
+  font-weight: 500;
+}
+
+.remove-reminder-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.remove-reminder-btn:hover {
+  background: #c82333;
+}
+
+/* Dark mode styles for site reminders */
+body.dark-mode .site-reminders {
+  border-color: #495057;
+}
+
+body.dark-mode .site-reminders h5 {
+  color: #e0e0e0;
+}
+
+body.dark-mode .site-reminder-controls select {
+  background: #2c3136;
+  border-color: #495057;
+  color: #e0e0e0;
+}
+
+body.dark-mode .site-reminders-list {
+  background: #2c3136;
+  border-color: #495057;
+}
+
+body.dark-mode .site-reminder-item {
+  border-color: #495057;
+}
+
+body.dark-mode .site-name {
+  color: #e0e0e0;
+}
+
+body.dark-mode .time-limit {
+  color: #b0b0b0;
+}
+
+.site-reminder-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Enhanced delete button positioning */
+.delete-site-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.delete-site-btn:hover {
+  background: rgba(220, 53, 69, 0.2);
+  border-color: rgba(220, 53, 69, 0.5);
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.delete-site-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: #dc3545;
+  transition: stroke 0.2s;
+}
+
+.delete-site-btn:hover svg {
+  stroke: #a71d2a;
+}
+
+/* Dark mode styles for delete button */
+body.dark-mode .delete-site-btn {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.4);
+}
+
+body.dark-mode .delete-site-btn:hover {
+  background: rgba(220, 53, 69, 0.25);
+  border-color: rgba(220, 53, 69, 0.6);
+}
+
+/* Ensure list items have relative positioning for absolute positioning of delete button */
+ul#list > li {
+  position: relative;
+}
+
+.site-timer-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 12px;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.site-timer-section h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #495057;
+  font-weight: 600;
+}
+.site-timer-section label {
+  font-size: 13px;
+  margin-bottom: 2px;
+  margin-right: 6px;
+}
+.site-timer-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.site-timer-section select,
+.site-timer-section input[type="number"] {
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.site-timer-error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
 }

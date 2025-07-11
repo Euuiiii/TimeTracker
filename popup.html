@@ -53,6 +53,7 @@
         <select id="time-format">
           <option value="minsec">Minutes:Seconds</option>
           <option value="min">Minutes Only</option>
+          <option value="hrmin">Hours:Minutes</option>
         </select>
         <label for="dark-mode-toggle" class="toggle-label">
           <span>Dark Mode</span>
@@ -62,18 +63,18 @@
           </span>
         </label>
         
-        <!-- Reminder Settings -->
-        <div class="reminder-section">
-          <h4>Time Reminders</h4>
-          <label for="reminder-enabled" class="toggle-label">
-            <span>Enable Reminders</span>
-            <span class="toggle-switch">
-              <input type="checkbox" id="reminder-enabled">
-              <span class="slider"></span>
-            </span>
-          </label>
-          <label for="reminder-time-limit">Default Time Limit (minutes):</label>
-          <input type="number" id="reminder-time-limit" min="1" max="480" placeholder="30">
+        <div class="site-timer-section">
+          <h4>Site-Specific Timer</h4>
+          <label for="site-timer-domain">Select Site:</label>
+          <select id="site-timer-domain"></select>
+          <div class="site-timer-inputs">
+            <label for="site-timer-hours">Hours:</label>
+            <input type="number" id="site-timer-hours" min="0" max="23" value="0" style="width:60px;">
+            <label for="site-timer-minutes">Minutes:</label>
+            <input type="number" id="site-timer-minutes" min="0" max="59" value="0" style="width:60px;">
+          </div>
+          <button id="save-site-timer" class="add-reminder-btn" style="margin-top:8px; width:100%;">Add</button>
+          <div id="site-timer-error" style="color:red; font-size:12px; display:none;"></div>
         </div>
         
         <button id="save-settings" class="save-btn">Save</button>
