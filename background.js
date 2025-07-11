@@ -54,6 +54,26 @@ async function checkTimeLimits(domain, currentSeconds) {
   }
 }
 
+async function checkSiteSpecificTimer(domain, currentSeconds) {
+  const stored = await browser.storage.local.get(["siteTimers"]);
+  const siteTimers = stored.siteTimers || {};
+  const timerMinutes = siteTimers[domain];
+  if (!timerMinutes) return;
+  const timerSeconds = timerMinutes * 60;
+  // Use sessionStorage to track if notification was shown for this domain today
+  const todayKey = `${domain}-timer-notified-${new Date().toDateString()}`;
+  if (sessionStorage.getItem(todayKey)) return;
+  if (currentSeconds >= timerSeconds) {
+    // Send a message to content script to show popup
+    sessionStorage.setItem(todayKey, '1');
+    browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
+      if (tabs[0]) {
+        browser.tabs.sendMessage(tabs[0].id, { type: "SHOW_SITE_TIMER_POPUP", domain });
+      }
+    });
+  }
+}
+
 async function updateTime(tabId, url) {
   let domain = "";
   try {
@@ -92,6 +112,7 @@ async function updateTime(tabId, url) {
 
     // Check time limits for the previous tab
     await checkTimeLimits(currentTab, timeData[currentTab].seconds);
+    await checkSiteSpecificTimer(currentTab, timeData[currentTab].seconds);
 
     await browser.storage.local.set({ timeData });
   }

@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const saveSettingsBtn = document.getElementById("save-settings");
   saveSettingsBtn.addEventListener("click", async () => {
     await saveSettings();
+    settingsModal.style.display = 'none';
   });
 
   function applyDarkMode(enabled) {
@@ -197,13 +198,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     list.innerHTML = '';
     let count = 0;
     let hasData = false;
-    const stored = await browser.storage.local.get(["settings"]);
+    const stored = await browser.storage.local.get(["timeData", "settings", "siteTimers"]);
+    const timeData = stored.timeData || {};
+    const entries = Object.entries(timeData);
     const settings = stored.settings || {};
+    const siteTimers = stored.siteTimers || {};
     let excludeDomains = [];
     if (settings.excludeDomains) {
       excludeDomains = settings.excludeDomains.split(",").map(d => d.trim()).filter(Boolean);
     }
     const filteredEntries = entries.filter(([domain]) => !excludeDomains.includes(domain));
+    // Sort by time spent (descending)
+    filteredEntries.sort((a, b) => (b[1].seconds || 0) - (a[1].seconds || 0));
     const totalTime = filteredEntries.reduce((sum, [, data]) => sum + (data.seconds || 0), 0);
     for (const [domain, data] of filteredEntries) {
       if (!showAll && count >= maxToShow) break;
@@ -244,6 +250,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       const mainLine = document.createElement('span');
       mainLine.textContent = `${domain}: ${timeStr}${percent}`;
       li.appendChild(mainLine);
+      // Show site-specific timer if set
+      if (siteTimers[domain]) {
+        const timerDiv = document.createElement('div');
+        const timerMinutes = siteTimers[domain];
+        const hr = Math.floor(timerMinutes / 60);
+        const minOnly = timerMinutes % 60;
+        let timerStr = '';
+        if (hr > 0) {
+          timerStr = `Timer: ${hr} hr${hr !== 1 ? 's' : ''} ${minOnly} min${minOnly !== 1 ? 's' : ''}`;
+        } else {
+          timerStr = `Timer: ${minOnly} min${minOnly !== 1 ? 's' : ''}`;
+        }
+        timerDiv.textContent = timerStr;
+        timerDiv.style.fontSize = '12px';
+        timerDiv.style.color = '#4f8cff';
+        timerDiv.style.marginTop = '2px';
+        li.appendChild(timerDiv);
+      }
       if (lastVisitedStr) {
         const small = document.createElement('div');
         small.className = 'last-visited';
@@ -292,6 +316,63 @@ document.addEventListener("DOMContentLoaded", async () => {
       emptyState.style.display = 'none';
     }
   }
+
+  // Render the list of sites with active timers in the settings modal
+  async function renderSiteTimerList() {
+    const siteTimerList = document.getElementById('site-timer-list');
+    if (!siteTimerList) return;
+    siteTimerList.innerHTML = '';
+    const stored = await browser.storage.local.get(["siteTimers"]);
+    const siteTimers = stored.siteTimers || {};
+    const domains = Object.keys(siteTimers);
+    if (domains.length === 0) {
+      const li = document.createElement('li');
+      li.textContent = 'No active site timers.';
+      li.style.color = '#888';
+      siteTimerList.appendChild(li);
+      return;
+    }
+    for (const domain of domains) {
+      const timerMinutes = siteTimers[domain];
+      const hr = Math.floor(timerMinutes / 60);
+      const minOnly = timerMinutes % 60;
+      let timerStr = '';
+      if (hr > 0) {
+        timerStr = `${hr} hr${hr !== 1 ? 's' : ''} ${minOnly} min${minOnly !== 1 ? 's' : ''}`;
+      } else {
+        timerStr = `${minOnly} min${minOnly !== 1 ? 's' : ''}`;
+      }
+      const li = document.createElement('li');
+      li.style.display = 'flex';
+      li.style.alignItems = 'center';
+      li.style.justifyContent = 'space-between';
+      li.style.gap = '8px';
+      li.style.fontSize = '14px';
+      li.innerHTML = `<span><strong>${domain}</strong>: ${timerStr}</span>`;
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-timer-btn';
+      removeBtn.title = 'Remove timer';
+      removeBtn.style.background = 'none';
+      removeBtn.style.border = 'none';
+      removeBtn.style.cursor = 'pointer';
+      removeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b30000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>`;
+      removeBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const stored = await browser.storage.local.get(["siteTimers"]);
+        const siteTimers = stored.siteTimers || {};
+        delete siteTimers[domain];
+        await browser.storage.local.set({ siteTimers });
+        renderSiteTimerList();
+      });
+      li.appendChild(removeBtn);
+      siteTimerList.appendChild(li);
+    }
+  }
+
+  // Call renderSiteTimerList when opening settings
+  settingsBtn.addEventListener("click", async () => {
+    await renderSiteTimerList();
+  });
 
   await loadSettings();
   calculateDailyStats();

@@ -804,3 +804,50 @@ ul#list > li {
   margin-top: 4px;
   display: none;
 }
+
+.site-timer-list-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.site-timer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+.site-timer-list li {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.site-timer-list li:last-child {
+  margin-bottom: 0;
+}
+.site-timer-list .remove-timer-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+.site-timer-list .remove-timer-btn svg {
+  stroke: #b30000;
+  fill: none;
+  transition: stroke 0.2s;
+}
+.site-timer-list .remove-timer-btn:hover {
+  background: #ffeaea;
+}
+.site-timer-list .remove-timer-btn:hover svg {
+  stroke: #ff0000;
+}
