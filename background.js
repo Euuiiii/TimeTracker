@@ -5,6 +5,7 @@ if (typeof browser === "undefined") {
   browser.storage = browser.storage || chrome.storage;
   browser.tabs = browser.tabs || chrome.tabs;
   browser.windows = browser.windows || chrome.windows;
+  browser.notifications = browser.notifications || chrome.notifications;
 }
 
 let currentTab = null;
@@ -163,11 +164,25 @@ async function startReminderChecking() {
         const currentData = timeData[currentTab];
         if (currentData) {
           await checkTimeLimits(currentTab, currentData.seconds);
-          await checkSiteSpecificTimer(currentTab, currentData.seconds);
         }
       }
     }, 30000); // 30 seconds
   }
+}
+
+// Start site-specific timer checking (always active)
+function startSiteTimerChecking() {
+  // Check every 30 seconds for site-specific timers
+  setInterval(async () => {
+    if (currentTab) {
+      const stored = await browser.storage.local.get("timeData");
+      const timeData = stored.timeData || {};
+      const currentData = timeData[currentTab];
+      if (currentData) {
+        await checkSiteSpecificTimer(currentTab, currentData.seconds);
+      }
+    }
+  }, 30000); // 30 seconds
 }
 
 // Stop reminder checking
@@ -222,3 +237,4 @@ browser.windows.onFocusChanged.addListener(windowId => {
 
 // Initialize reminder checking on startup
 startReminderChecking();
+startSiteTimerChecking();

@@ -748,7 +748,7 @@ body.dark-mode .time-limit {
 }
 
 /* Enhanced delete button positioning */
-.delete-site-btn {
+.delete-btn {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -767,31 +767,31 @@ body.dark-mode .time-limit {
   opacity: 0.7;
 }
 
-.delete-site-btn:hover {
+.delete-btn:hover {
   background: rgba(220, 53, 69, 0.2);
   border-color: rgba(220, 53, 69, 0.5);
   opacity: 1;
   transform: scale(1.05);
 }
 
-.delete-site-btn svg {
+.delete-btn svg {
   width: 14px;
   height: 14px;
   stroke: #dc3545;
   transition: stroke 0.2s;
 }
 
-.delete-site-btn:hover svg {
+.delete-btn:hover svg {
   stroke: #a71d2a;
 }
 
 /* Dark mode styles for delete button */
-body.dark-mode .delete-site-btn {
+body.dark-mode .delete-btn {
   background: rgba(220, 53, 69, 0.15);
   border-color: rgba(220, 53, 69, 0.4);
 }
 
-body.dark-mode .delete-site-btn:hover {
+body.dark-mode .delete-btn:hover {
   background: rgba(220, 53, 69, 0.25);
   border-color: rgba(220, 53, 69, 0.6);
 }

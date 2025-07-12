@@ -3,6 +3,7 @@ if (typeof browser === "undefined") {
     return window.chrome ? window.chrome : {};
   })();
   browser.storage = browser.storage || chrome.storage;
+  browser.tabs = browser.tabs || chrome.tabs;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -133,12 +134,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const reminderTimeLimit = document.getElementById("reminder-time-limit");
 
   settingsBtn.addEventListener("click", async () => {
-    await loadSettings();
-    populateSiteDropdown();
-    if (siteTimerDomain.value) {
-      await loadSiteTimer(siteTimerDomain.value);
+    try {
+      await loadSettings();
+      populateSiteDropdown();
+      if (siteTimerDomain.value) {
+        await loadSiteTimer(siteTimerDomain.value);
+      }
+      await renderSiteTimerList();
+      settingsModal.style.display = "flex";
+    } catch (error) {
+      console.error('Error opening settings:', error);
     }
-    settingsModal.style.display = "flex";
   });
   closeSettingsBtn.addEventListener("click", () => {
     settingsModal.style.display = "none";
@@ -224,30 +230,48 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   saveSiteTimerBtn.addEventListener('click', async () => {
-    const domain = siteTimerDomain.value;
-    const hours = parseInt(siteTimerHours.value) || 0;
-    const minutes = parseInt(siteTimerMinutes.value) || 0;
-    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      siteTimerError.textContent = 'Invalid time.';
+    try {
+      const domain = siteTimerDomain.value;
+      if (!domain) {
+        siteTimerError.textContent = 'Please select a site.';
+        siteTimerError.style.display = 'block';
+        return;
+      }
+      
+      const hours = parseInt(siteTimerHours.value) || 0;
+      const minutes = parseInt(siteTimerMinutes.value) || 0;
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        siteTimerError.textContent = 'Invalid time.';
+        siteTimerError.style.display = 'block';
+        return;
+      }
+      
+      const totalMinutes = hours * 60 + minutes;
+      if (totalMinutes === 0) {
+        siteTimerError.textContent = 'Please set a time greater than 0.';
+        siteTimerError.style.display = 'block';
+        return;
+      }
+      
+      siteTimerError.style.display = 'none';
+      const stored = await browser.storage.local.get(["siteTimers"]);
+      const siteTimers = stored.siteTimers || {};
+      siteTimers[domain] = totalMinutes;
+      await browser.storage.local.set({ siteTimers });
+      
+      // Update the site timer list to show the new timer
+      await renderSiteTimerList();
+      
+      // Reset the form for adding another timer
+      siteTimerHours.value = 0;
+      siteTimerMinutes.value = 0;
+      
+      // Keep the settings modal open
+    } catch (error) {
+      console.error('Error saving site timer:', error);
+      siteTimerError.textContent = 'Error saving timer.';
       siteTimerError.style.display = 'block';
-      return;
     }
-    siteTimerError.style.display = 'none';
-    const totalMinutes = hours * 60 + minutes;
-    const stored = await browser.storage.local.get(["siteTimers"]);
-    const siteTimers = stored.siteTimers || {};
-    siteTimers[domain] = totalMinutes;
-    await browser.storage.local.set({ siteTimers });
-    
-    // Update the site timer list to show the new timer
-    await renderSiteTimerList();
-    
-    // Reset the form for adding another timer
-    siteTimerHours.value = 0;
-    siteTimerMinutes.value = 0;
-    
-    // Keep the settings modal open
-    // settingsModal.style.display = 'none'; // Removed this line
   });
 
   siteTimerDomain.addEventListener('change', (e) => {
@@ -436,26 +460,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Call renderSiteTimerList when opening settings
-  settingsBtn.addEventListener("click", async () => {
-    await renderSiteTimerList();
-  });
+
 
   await loadSettings();
   calculateDailyStats();
   renderList();
 
   document.getElementById("clear").addEventListener("click", async () => {
-    await browser.storage.local.set({ timeData: {} });
-    list.innerHTML = "";
-    emptyState.textContent = 'No browsing data yet.';
-    emptyState.style.display = 'block';
-    calculateDailyStats();
-  });
-
-  browser.tabs && browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
-    if (tabs[0]) {
-      browser.runtime.sendMessage({ type: "FORCE_UPDATE_TIME", tabId: tabs[0].id, url: tabs[0].url });
+    try {
+      await browser.storage.local.set({ timeData: {} });
+      list.innerHTML = "";
+      emptyState.textContent = 'No browsing data yet.';
+      emptyState.style.display = 'block';
+      calculateDailyStats();
+    } catch (error) {
+      console.error('Error clearing data:', error);
     }
   });
+
+  try {
+    browser.tabs && browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
+      if (tabs[0]) {
+        browser.runtime.sendMessage({ type: "FORCE_UPDATE_TIME", tabId: tabs[0].id, url: tabs[0].url });
+      }
+    }).catch(error => {
+      console.error('Error querying tabs:', error);
+    });
+  } catch (error) {
+    console.error('Error in tab query:', error);
+  }
 });
