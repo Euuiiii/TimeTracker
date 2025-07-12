@@ -106,20 +106,16 @@ A powerful browser extension to track and manage your time spent on websites. Mo
 ## 📱 Screenshots
 
 ### Main Interface
-![Main Interface](readme%20image/front.png)
+![Main Interface](./readme%20image/front.png)
 *Clean, modern interface showing today's statistics and site list*
 
 ### Settings Modal
-![Settings](readme%20image/setting.png)
+![Settings](./readme%20image/setting.png)
 *Comprehensive settings with reminder configuration and site timers*
 
 ### Dark Mode
-![Dark Mode](readme%20image/dark.png)
+![Dark Mode](./readme%20image/dark.png)
 *Easy on the eyes with dark theme support*
-
-### Pause State
-![Pause State](screenshots/pause-state.png)
-*Clear visual feedback when tracking is paused*
 
 ## 🔧 Technical Details
 
@@ -191,14 +187,10 @@ If you encounter any issues or have suggestions:
 ## 🎯 Roadmap
 
 ### Upcoming Features
-- [ ] Data export (CSV/JSON)
 - [ ] Weekly/monthly reports
 - [ ] Goal setting and achievements
 - [ ] Focus mode (site blocking)
 - [ ] Pomodoro timer integration
-- [ ] Advanced analytics dashboard
-- [ ] Cloud sync (optional)
-- [ ] Mobile app companion
 
 ---
 
