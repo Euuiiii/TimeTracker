@@ -106,15 +106,15 @@ A powerful browser extension to track and manage your time spent on websites. Mo
 ## 📱 Screenshots
 
 ### Main Interface
-![Main Interface](./readme%20image/front.png)
+![Main Interface](front.png)
 *Clean, modern interface showing today's statistics and site list*
 
 ### Settings Modal
-![Settings](./readme%20image/setting.png)
+![Settings](setting.png)
 *Comprehensive settings with reminder configuration and site timers*
 
 ### Dark Mode
-![Dark Mode](./readme%20image/dark.png)
+![Dark Mode](dark.png)
 *Easy on the eyes with dark theme support*
 
 ## 🔧 Technical Details
