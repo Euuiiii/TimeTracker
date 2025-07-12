@@ -144,6 +144,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     settingsModal.style.display = "none";
     loadSettings();
   });
+  
+  // Close modal when clicking outside the content area
+  settingsModal.addEventListener("click", (e) => {
+    if (e.target === settingsModal) {
+      settingsModal.style.display = "none";
+      loadSettings();
+    }
+  });
 
   async function loadSettings() {
     const stored = await browser.storage.local.get(["settings"]);
