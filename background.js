@@ -11,6 +11,8 @@ if (typeof browser === "undefined") {
 let currentTab = null;
 let startTime = null;
 let reminderCheckInterval = null;
+let trackingPaused = false;
+let pauseStartTime = null;
 
 async function getExcludedDomains() {
   const stored = await browser.storage.local.get(["settings"]);
@@ -96,6 +98,9 @@ async function checkSiteSpecificTimer(domain, currentSeconds) {
 }
 
 async function updateTime(tabId, url) {
+  // Don't track time if paused
+  if (trackingPaused) return;
+  
   let domain = "";
   try {
     domain = new URL(url).hostname;
@@ -215,6 +220,18 @@ browser.runtime.onMessage && browser.runtime.onMessage.addListener((msg, sender,
     updateTime(msg.tabId, msg.url);
     sendResponse({ success: true });
   }
+  if (msg && msg.type === "TOGGLE_PAUSE") {
+    togglePauseTracking();
+    sendResponse({ success: true, paused: trackingPaused });
+  }
+  if (msg && msg.type === "GET_PAUSE_STATUS") {
+    sendResponse({ 
+      success: true, 
+      paused: trackingPaused, 
+      pauseStartTime: pauseStartTime,
+      pauseDuration: pauseStartTime ? Math.floor((Date.now() - pauseStartTime) / 1000) : 0
+    });
+  }
 });
 
 browser.tabs.onActivated.addListener(async activeInfo => {
@@ -238,3 +255,47 @@ browser.windows.onFocusChanged.addListener(windowId => {
 // Initialize reminder checking on startup
 startReminderChecking();
 startSiteTimerChecking();
+
+// Load pause state on startup
+async function loadPauseState() {
+  try {
+    const stored = await browser.storage.local.get(["pauseState"]);
+    const pauseState = stored.pauseState || {};
+    trackingPaused = pauseState.trackingPaused || false;
+    pauseStartTime = pauseState.pauseStartTime || null;
+  } catch (error) {
+    console.error('Error loading pause state:', error);
+  }
+}
+
+// Toggle pause tracking
+async function togglePauseTracking() {
+  trackingPaused = !trackingPaused;
+  
+  if (trackingPaused) {
+    // Pause tracking
+    pauseStartTime = Date.now();
+  } else {
+    // Resume tracking - adjust startTime to account for pause
+    if (pauseStartTime && startTime) {
+      const pauseDuration = Date.now() - pauseStartTime;
+      startTime += pauseDuration; // Adjust start time to account for pause
+    }
+    pauseStartTime = null;
+  }
+  
+  // Save pause state
+  try {
+    await browser.storage.local.set({
+      pauseState: {
+        trackingPaused: trackingPaused,
+        pauseStartTime: pauseStartTime
+      }
+    });
+  } catch (error) {
+    console.error('Error saving pause state:', error);
+  }
+}
+
+// Load pause state when extension starts
+loadPauseState();

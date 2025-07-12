@@ -132,6 +132,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const siteTimerError = document.getElementById("site-timer-error");
   const reminderEnabled = document.getElementById("reminder-enabled");
   const reminderTimeLimit = document.getElementById("reminder-time-limit");
+  const pauseResumeBtn = document.getElementById("pause-resume-btn");
+  const pauseStatus = document.getElementById("pause-status");
+  const pauseIcon = pauseResumeBtn.querySelector(".pause-icon");
+  const pauseText = pauseResumeBtn.querySelector(".pause-text");
 
   settingsBtn.addEventListener("click", async () => {
     try {
@@ -158,6 +162,72 @@ document.addEventListener("DOMContentLoaded", async () => {
       loadSettings();
     }
   });
+
+  // Pause/Resume tracking functionality
+  pauseResumeBtn.addEventListener("click", async () => {
+    try {
+      const response = await browser.runtime.sendMessage({ type: "TOGGLE_PAUSE" });
+      if (response && response.success) {
+        updatePauseButton(response.paused);
+      }
+    } catch (error) {
+      console.error('Error toggling pause:', error);
+    }
+  });
+
+  // Update pause button appearance
+  function updatePauseButton(paused) {
+    if (paused) {
+      pauseResumeBtn.classList.add('paused');
+      pauseIcon.textContent = '▶️';
+      pauseText.textContent = 'RESUME TRACKING';
+      document.body.classList.add('tracking-paused');
+      pauseStatus.style.display = 'block';
+      updatePauseDuration();
+      startPauseDurationUpdate();
+    } else {
+      pauseResumeBtn.classList.remove('paused');
+      pauseIcon.textContent = '⏸️';
+      pauseText.textContent = 'PAUSE TRACKING';
+      document.body.classList.remove('tracking-paused');
+      pauseStatus.style.display = 'none';
+      stopPauseDurationUpdate();
+    }
+  }
+
+  // Update pause duration display
+  function updatePauseDuration() {
+    if (!pauseStatus.style.display || pauseStatus.style.display === 'none') return;
+    
+    browser.runtime.sendMessage({ type: "GET_PAUSE_STATUS" }).then(response => {
+      if (response && response.success && response.pauseDuration > 0) {
+        const minutes = Math.floor(response.pauseDuration / 60);
+        const seconds = response.pauseDuration % 60;
+        const durationText = minutes > 0 ? 
+          `Paused for ${minutes}m ${seconds}s` : 
+          `Paused for ${seconds}s`;
+        pauseStatus.querySelector('.pause-duration').textContent = durationText;
+      }
+    }).catch(error => {
+      console.error('Error getting pause status:', error);
+    });
+  }
+
+  // Update pause duration every second when paused
+  let pauseDurationInterval = null;
+  function startPauseDurationUpdate() {
+    if (pauseDurationInterval) clearInterval(pauseDurationInterval);
+    pauseDurationInterval = setInterval(() => {
+      updatePauseDuration();
+    }, 1000);
+  }
+
+  function stopPauseDurationUpdate() {
+    if (pauseDurationInterval) {
+      clearInterval(pauseDurationInterval);
+      pauseDurationInterval = null;
+    }
+  }
 
   async function loadSettings() {
     const stored = await browser.storage.local.get(["settings"]);
@@ -465,6 +535,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadSettings();
   calculateDailyStats();
   renderList();
+  
+  // Load and display pause state
+  try {
+    const response = await browser.runtime.sendMessage({ type: "GET_PAUSE_STATUS" });
+    if (response && response.success) {
+      updatePauseButton(response.paused);
+      if (response.paused) {
+        startPauseDurationUpdate();
+      }
+    }
+  } catch (error) {
+    console.error('Error loading pause state:', error);
+  }
 
   document.getElementById("clear").addEventListener("click", async () => {
     try {

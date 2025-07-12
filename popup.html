@@ -44,6 +44,17 @@
     
     <ul id="list"></ul>
     <div id="empty-state" class="empty-state" style="display:none;">No browsing data yet.</div>
+    
+    <!-- Pause/Resume Tracking Button -->
+    <div class="tracking-controls">
+      <button id="pause-resume-btn" class="pause-resume-btn">
+        ⏸️ PAUSE TRACKING
+      </button>
+      <div id="pause-status" class="pause-status" style="display:none;">
+        <span class="pause-duration">Paused for 0m</span>
+      </div>
+    </div>
+    
     <button id="clear">Clear Data</button>
     <div id="settings-modal" class="settings-modal" style="display:none;">
       <div class="settings-content">

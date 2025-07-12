@@ -747,7 +747,6 @@ body.dark-mode .time-limit {
   justify-content: flex-start;
 }
 
-/* Enhanced delete button positioning */
 .delete-btn {
   position: absolute;
   top: 8px;
@@ -918,4 +917,103 @@ body.dark-mode .today-table th {
 }
 body.dark-mode .today-table td {
   color: #e0e0e0;
+}
+
+/* Pause/Resume Tracking Controls */
+.tracking-controls {
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pause-resume-btn {
+  background: #4f8cff;
+  color: white;
+  border: 1px solid #4f8cff;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.pause-resume-btn:hover {
+  background: #3576e6;
+  border-color: #3576e6;
+  transform: translateY(-1px);
+}
+
+.pause-resume-btn.paused {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+.pause-resume-btn.paused:hover {
+  background: #218838;
+  border-color: #218838;
+}
+
+.pause-icon {
+  font-size: 16px;
+}
+
+.pause-text {
+  font-weight: 600;
+}
+
+.pause-status {
+  text-align: center;
+  font-size: 12px;
+  color: #6c757d;
+  padding: 4px 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.pause-duration {
+  font-weight: 500;
+}
+
+/* Dark mode styles for pause controls */
+body.dark-mode .pause-resume-btn {
+  background: #4f8cff;
+  border-color: #4f8cff;
+}
+
+body.dark-mode .pause-resume-btn:hover {
+  background: #3576e6;
+  border-color: #3576e6;
+}
+
+body.dark-mode .pause-resume-btn.paused {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+body.dark-mode .pause-resume-btn.paused:hover {
+  background: #218838;
+  border-color: #218838;
+}
+
+body.dark-mode .pause-status {
+  background: #2c3136;
+  border-color: #495057;
+  color: #b0b0b0;
+}
+
+/* Paused state styling for the entire popup */
+body.tracking-paused .popup-container {
+  opacity: 0.8;
+}
+
+body.tracking-paused .pause-resume-btn {
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3);
 }
