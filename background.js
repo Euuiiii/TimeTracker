@@ -83,6 +83,10 @@ async function checkSiteSpecificTimer(domain, currentSeconds) {
         await browser.notifications.create(`site-timer-${domain}`, notificationOptions);
         // Mark as notified for today
         sessionStorage.setItem(todayKey, '1');
+        
+        // Remove the site timer after showing notification
+        delete siteTimers[domain];
+        await browser.storage.local.set({ siteTimers });
       }
     } catch (e) {
       console.log('Site timer notification not supported or failed:', e);
@@ -159,6 +163,7 @@ async function startReminderChecking() {
         const currentData = timeData[currentTab];
         if (currentData) {
           await checkTimeLimits(currentTab, currentData.seconds);
+          await checkSiteSpecificTimer(currentTab, currentData.seconds);
         }
       }
     }, 30000); // 30 seconds

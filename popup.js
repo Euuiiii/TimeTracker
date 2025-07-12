@@ -230,7 +230,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const siteTimers = stored.siteTimers || {};
     siteTimers[domain] = totalMinutes;
     await browser.storage.local.set({ siteTimers });
-    settingsModal.style.display = 'none';
+    
+    // Update the site timer list to show the new timer
+    await renderSiteTimerList();
+    
+    // Reset the form for adding another timer
+    siteTimerHours.value = 0;
+    siteTimerMinutes.value = 0;
+    
+    // Keep the settings modal open
+    // settingsModal.style.display = 'none'; // Removed this line
   });
 
   siteTimerDomain.addEventListener('change', (e) => {
