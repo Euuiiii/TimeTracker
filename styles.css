@@ -168,6 +168,41 @@ ul {
   max-height: 180px;
   overflow-y: auto;
   flex-grow: 1;
+  /* Override global scrollbar hiding for the main list */
+  scrollbar-width: auto;
+  -ms-overflow-style: auto;
+}
+
+ul::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+ul::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+ul::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+ul::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Dark mode scrollbar styles */
+body.dark-mode ul::-webkit-scrollbar-track {
+  background: #2c3136;
+}
+
+body.dark-mode ul::-webkit-scrollbar-thumb {
+  background: #495057;
+}
+
+body.dark-mode ul::-webkit-scrollbar-thumb:hover {
+  background: #6c757d;
 }
 
 li {
