@@ -851,3 +851,36 @@ ul#list > li {
 .site-timer-list .remove-timer-btn:hover svg {
   stroke: #ff0000;
 }
+
+.today-table {
+  margin-top: 10px;
+  width: 100%;
+  overflow-x: auto;
+}
+.today-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.today-table th, .today-table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+.today-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+.today-table img.favicon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+body.dark-mode .today-table th {
+  background: #23272b;
+  color: #e0e0e0;
+}
+body.dark-mode .today-table td {
+  color: #e0e0e0;
+}

@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const todayTotal = document.getElementById("today-total");
   const todaySites = document.getElementById("today-sites");
   const todayTopSite = document.getElementById("today-top-site");
+  const todayTable = document.getElementById("today-table");
   
   list.innerHTML = '';
   emptyState.style.display = 'none';
@@ -64,10 +65,53 @@ document.addEventListener("DOMContentLoaded", async () => {
     todayTopSite.textContent = todayTopSiteName;
   }
 
+  function renderTodayTable() {
+    const today = new Date().toDateString();
+    let rows = [];
+    for (const [domain, data] of entries) {
+      if (data.lastVisited) {
+        const lastVisitedDate = new Date(data.lastVisited).toDateString();
+        if (lastVisitedDate === today) {
+          const totalSeconds = data.seconds || 0;
+          const min = Math.floor(totalSeconds / 60);
+          const sec = totalSeconds % 60;
+          let timeStr = min > 0 ? `${min} min${min !== 1 ? 's' : ''} ${sec} sec` : `${sec} sec`;
+          rows.push(`
+            <tr>
+              <td><img class="favicon" src="${getFaviconUrl(domain)}" alt="">${domain}</td>
+              <td>${timeStr}</td>
+            </tr>
+          `);
+        }
+      }
+    }
+    if (rows.length === 0) {
+      todayTable.innerHTML = '<div style="color:#888; text-align:center;">No sites visited today.</div>';
+      return;
+    }
+    todayTable.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Website</th>
+            <th>Time Spent</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
   toggleStatsBtn.addEventListener("click", () => {
     const isVisible = dailyStats.style.display !== "none";
     dailyStats.style.display = isVisible ? "none" : "block";
+    todayTable.style.display = isVisible ? "none" : "block";
     toggleStatsBtn.textContent = isVisible ? "Show" : "Hide";
+    if (!isVisible) {
+      renderTodayTable();
+    }
   });
 
   function getFaviconUrl(domain) {
