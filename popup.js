@@ -129,6 +129,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const siteTimerMinutes = document.getElementById("site-timer-minutes");
   const saveSiteTimerBtn = document.getElementById("save-site-timer");
   const siteTimerError = document.getElementById("site-timer-error");
+  const reminderEnabled = document.getElementById("reminder-enabled");
+  const reminderTimeLimit = document.getElementById("reminder-time-limit");
 
   settingsBtn.addEventListener("click", async () => {
     await loadSettings();
@@ -149,6 +151,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     excludeDomainsInput.value = settings.excludeDomains || "";
     timeFormatSelect.value = settings.timeFormat || "minsec";
     darkModeToggle.checked = settings.darkMode || false;
+    reminderEnabled.checked = settings.reminderEnabled || false;
+    reminderTimeLimit.value = settings.reminderTimeLimit || 30;
     applyDarkMode(settings.darkMode);
   }
 
@@ -157,6 +161,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       excludeDomains: excludeDomainsInput.value,
       timeFormat: timeFormatSelect.value,
       darkMode: darkModeToggle.checked,
+      reminderEnabled: reminderEnabled.checked,
+      reminderTimeLimit: parseInt(reminderTimeLimit.value) || 30,
     };
     await browser.storage.local.set({ settings });
     applyDarkMode(settings.darkMode);

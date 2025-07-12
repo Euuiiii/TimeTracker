@@ -36,6 +36,10 @@ async function checkTimeLimits(domain, currentSeconds) {
   const limitSeconds = reminderSettings.defaultLimit * 60;
 
   if (currentSeconds >= limitSeconds) {
+    // Use sessionStorage to track if notification was shown for this domain today
+    const todayKey = `${domain}-reminder-notified-${new Date().toDateString()}`;
+    if (sessionStorage.getItem(todayKey)) return;
+    
     // Show notification
     const notificationOptions = {
       type: 'basic',
@@ -47,6 +51,8 @@ async function checkTimeLimits(domain, currentSeconds) {
     try {
       if (browser.notifications) {
         await browser.notifications.create(`time-limit-${domain}`, notificationOptions);
+        // Mark as notified for today
+        sessionStorage.setItem(todayKey, '1');
       }
     } catch (e) {
       console.log('Notification not supported or failed:', e);
@@ -64,13 +70,23 @@ async function checkSiteSpecificTimer(domain, currentSeconds) {
   const todayKey = `${domain}-timer-notified-${new Date().toDateString()}`;
   if (sessionStorage.getItem(todayKey)) return;
   if (currentSeconds >= timerSeconds) {
-    // Send a message to content script to show popup
-    sessionStorage.setItem(todayKey, '1');
-    browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
-      if (tabs[0]) {
-        browser.tabs.sendMessage(tabs[0].id, { type: "SHOW_SITE_TIMER_POPUP", domain });
+    // Show notification for site-specific timer
+    const notificationOptions = {
+      type: 'basic',
+      iconUrl: 'timetracker.png',
+      title: 'Site Timer Reached!',
+      message: `You've spent ${Math.floor(currentSeconds / 60)} minutes on ${domain}. Your custom timer of ${timerMinutes} minutes has been reached!`
+    };
+
+    try {
+      if (browser.notifications) {
+        await browser.notifications.create(`site-timer-${domain}`, notificationOptions);
+        // Mark as notified for today
+        sessionStorage.setItem(todayKey, '1');
       }
-    });
+    } catch (e) {
+      console.log('Site timer notification not supported or failed:', e);
+    }
   }
 }
 

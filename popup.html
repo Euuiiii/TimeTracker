@@ -64,6 +64,19 @@
           </span>
         </label>
         
+        <div class="reminder-section">
+          <h4>Time Limit Reminders</h4>
+          <label for="reminder-enabled" class="toggle-label">
+            <span>Enable Reminders</span>
+            <span class="toggle-switch">
+              <input type="checkbox" id="reminder-enabled">
+              <span class="slider"></span>
+            </span>
+          </label>
+          <label for="reminder-time-limit">Default Time Limit (minutes):</label>
+          <input type="number" id="reminder-time-limit" min="1" max="480" value="30" placeholder="30">
+        </div>
+        
         <div class="site-timer-section">
           <h4>Site-Specific Timer</h4>
           <label for="site-timer-domain">Select Site:</label>
