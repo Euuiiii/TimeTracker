@@ -747,6 +747,7 @@ body.dark-mode .time-limit {
   justify-content: flex-start;
 }
 
+/* Enhanced delete button positioning */
 .delete-btn {
   position: absolute;
   top: 8px;
